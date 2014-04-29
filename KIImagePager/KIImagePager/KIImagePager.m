@@ -11,6 +11,7 @@
 #define kOverlayHeight      15
 
 #import "KIImagePager.h"
+#import "INMImageView.h"
 
 @interface KIImagePager () <UIScrollViewDelegate>
 {
@@ -171,10 +172,12 @@
         
         for (int i = 0; i < [aImageUrls count]; i++) {
             CGRect imageFrame = CGRectMake(_scrollView.frame.size.width * i, 0, _scrollView.frame.size.width, _scrollView.frame.size.height);
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:imageFrame];
+            INMImageView *imageView = [[INMImageView alloc] initWithFrame:imageFrame];
             [imageView setBackgroundColor:[UIColor clearColor]];
             [imageView setContentMode:[_dataSource contentModeForImage:i]];
-            [imageView setTag:i];
+            [imageView setTag:i + 2300];
+            [imageView setDelegate:self];
+            [imageView setPlaceholderImage:[_dataSource placeHolderImageForImagePager]];
             [self loadImageView:imageView WithObject:[aImageUrls objectAtIndex:i]];
             
             // Add GestureRecognizer to ImageView
@@ -184,6 +187,10 @@
             [singleTapGestureRecognizer setNumberOfTapsRequired:1];
             [imageView addGestureRecognizer:singleTapGestureRecognizer];
             [imageView setUserInteractionEnabled:YES];
+            
+            if (i == 0) {
+                [imageView startAnimating];
+            }
             
             [_scrollView addSubview:imageView];
         }
@@ -202,14 +209,13 @@
     
     //TODO: REMOVE THIS
     int i = 0;
+    [imageView setAnimationDuration:5.0];
     
     if ([object isKindOfClass:[NSArray class]]){
         //        for (id newObject in object) {
         //            [self loadImageView:imageView WithObject:newObject];
         //        }
         [imageView setAnimationImages:object];
-        [imageView setAnimationDuration:5.0];
-        [imageView startAnimating];
     } else if([object isKindOfClass:[UIImage class]]) {
         // Set ImageView's Image directly
         [imageView setImage:(UIImage *)object];
@@ -246,7 +252,7 @@
 - (void) imageTapped:(UITapGestureRecognizer *)sender
 {
     if([_delegate respondsToSelector:@selector(imagePager:didSelectImageAtIndex:)]) {
-        [_delegate imagePager:self didSelectImageAtIndex:[(UIGestureRecognizer *)sender view].tag];
+        [_delegate imagePager:self didSelectImageAtIndex:[(UIGestureRecognizer *)sender view].tag - 2300];
     }
 }
 
@@ -325,6 +331,9 @@
 
 - (void) fireDidScrollToIndexDelegateForPage:(NSUInteger)page
 {
+    UIImageView *imageView = [_scrollView viewWithTag:2300 + page];
+    [imageView startAnimating];
+    
     if([_delegate respondsToSelector:@selector(imagePager:didScrollToIndex:)]) {
         [_delegate imagePager:self didScrollToIndex:page];
     }
@@ -424,6 +433,24 @@
     
     [_pageControl setCurrentPage:currentPage];
     [_scrollView scrollRectToVisible:CGRectMake(self.frame.size.width * currentPage, 0, self.frame.size.width, self.frame.size.width) animated:animated];
+}
+
+
+#pragma mark INMImageViewDelegate
+
+-(void)didRestartAnimation:(UIImageView *) imageView{
+    //[imageView stopAnimating];
+    if([_slideshowTimer isValid]) {
+        [_slideshowTimer invalidate];
+    }
+    
+    int currentPage = (self.pageControl.currentPage + 1) % self.pageControl.numberOfPages;
+    
+    NSLog(@"%d", currentPage);
+    [self setCurrentPage:currentPage];
+    [self updateCaptionLabelForImageAtIndex:currentPage];
+    [self fireDidScrollToIndexDelegateForPage:currentPage];
+    [self checkWetherToToggleSlideshowTimer];
 }
 
 @end
