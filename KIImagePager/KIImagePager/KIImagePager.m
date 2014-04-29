@@ -122,15 +122,16 @@
     [self addSubview:_imageCounterBackground];
 }
 
-- (void) initializeCaption
-{
-    _captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, _scrollView.frame.size.width - 10, 20)];
+- (void) initializeCaption {
+    _captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _scrollView.frame.size.height - 40, _scrollView.frame.size.width, 40)];
+    [_captionLabel setNumberOfLines:0];
     [_captionLabel setBackgroundColor:self.captionBackgroundColor];
     [_captionLabel setTextColor:self.captionTextColor];
     [_captionLabel setFont:self.captionFont];
-
+    
     _captionLabel.alpha = 0.7f;
     _captionLabel.layer.cornerRadius = 5.0f;
+    
     
     [self addSubview:_captionLabel];
 }
@@ -174,38 +175,7 @@
             [imageView setBackgroundColor:[UIColor clearColor]];
             [imageView setContentMode:[_dataSource contentModeForImage:i]];
             [imageView setTag:i];
-
-            if([[aImageUrls objectAtIndex:i] isKindOfClass:[UIImage class]]) {
-                // Set ImageView's Image directly
-                [imageView setImage:(UIImage *)[aImageUrls objectAtIndex:i]];
-            } else if([[aImageUrls objectAtIndex:i] isKindOfClass:[NSString class]] ||
-                      [[aImageUrls objectAtIndex:i] isKindOfClass:[NSURL class]]) {
-                // Instantiate and show Actvity Indicator
-                UIActivityIndicatorView *activityIndicator = [UIActivityIndicatorView new];
-                activityIndicator.center = (CGPoint){_scrollView.frame.size.width/2, _scrollView.frame.size.height/2};
-                activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
-                [imageView addSubview:activityIndicator];
-                [activityIndicator startAnimating];
-                [_activityIndicators setObject:activityIndicator forKey:[NSString stringWithFormat:@"%d", i]];
-                
-                // Asynchronously retrieve image
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                    NSData *imageData = [NSData dataWithContentsOfURL:
-                                         [[aImageUrls objectAtIndex:i] isKindOfClass:[NSURL class]]?
-                                         [aImageUrls objectAtIndex:i]:
-                                         [NSURL URLWithString:(NSString *)[aImageUrls objectAtIndex:i]]];
-                    dispatch_sync(dispatch_get_main_queue(), ^{
-                        [imageView setImage:[UIImage imageWithData:imageData]];
-
-                        // Stop and Remove Activity Indicator
-                        UIActivityIndicatorView *indicatorView = (UIActivityIndicatorView *)[_activityIndicators objectForKey:[NSString stringWithFormat:@"%d", i]];
-                        if (indicatorView) {
-                            [indicatorView stopAnimating];
-                            [_activityIndicators removeObjectForKey:[NSString stringWithFormat:@"%d", i]];
-                        }
-                    });
-                });
-            }
+            [self loadImageView:imageView WithObject:[aImageUrls objectAtIndex:i]];
             
             // Add GestureRecognizer to ImageView
             UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc]
@@ -223,10 +193,53 @@
     } else {
         UIImageView *blankImage = [[UIImageView alloc] initWithFrame:_scrollView.frame];
         [blankImage setImage:[_dataSource placeHolderImageForImagePager]];
-        if([_dataSource respondsToSelector:@selector(contentModeForPlaceHolder)]) {
-            [blankImage setContentMode:[_dataSource contentModeForPlaceHolder]];
-        }
         [_scrollView addSubview:blankImage];
+    }
+}
+
+
+-(void)loadImageView:(UIImageView *)imageView WithObject:(id)object{
+    
+    //TODO: REMOVE THIS
+    int i = 0;
+    
+    if ([object isKindOfClass:[NSArray class]]){
+        //        for (id newObject in object) {
+        //            [self loadImageView:imageView WithObject:newObject];
+        //        }
+        [imageView setAnimationImages:object];
+        [imageView setAnimationDuration:5.0];
+        [imageView startAnimating];
+    } else if([object isKindOfClass:[UIImage class]]) {
+        // Set ImageView's Image directly
+        [imageView setImage:(UIImage *)object];
+    } else if([object isKindOfClass:[NSString class]] ||
+              [object isKindOfClass:[NSURL class]]) {
+        // Instantiate and show Actvity Indicator
+        UIActivityIndicatorView *activityIndicator = [UIActivityIndicatorView new];
+        activityIndicator.center = (CGPoint){_scrollView.frame.size.width/2, _scrollView.frame.size.height/2};
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+        [imageView addSubview:activityIndicator];
+        [activityIndicator startAnimating];
+        [_activityIndicators setObject:activityIndicator forKey:[NSString stringWithFormat:@"%d", i]];
+        
+        // Asynchronously retrieve image
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSData *imageData = [NSData dataWithContentsOfURL:
+                                 [object isKindOfClass:[NSURL class]]?
+                                                       object:
+                                 [NSURL URLWithString:(NSString *)object]];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [imageView setImage:[UIImage imageWithData:imageData]];
+                
+                // Stop and Remove Activity Indicator
+                UIActivityIndicatorView *indicatorView = (UIActivityIndicatorView *)[_activityIndicators objectForKey:[NSString stringWithFormat:@"%d", i]];
+                if (indicatorView) {
+                    [indicatorView stopAnimating];
+                    [_activityIndicators removeObjectForKey:[NSString stringWithFormat:@"%d", i]];
+                }
+            });
+        });
     }
 }
 
@@ -249,7 +262,7 @@
 }
 
 - (BOOL)bounces {
-
+    
 	return _bounces;
 }
 
@@ -324,7 +337,7 @@
     if([_pageControl currentPage] < ([[_dataSource arrayWithImages] count] - 1)) {
         nextPage = [_pageControl currentPage] + 1;
     }
-
+    
     [_scrollView scrollRectToVisible:CGRectMake(self.frame.size.width * nextPage, 0, self.frame.size.width, self.frame.size.width) animated:YES];
     [_pageControl setCurrentPage:nextPage];
     

@@ -30,6 +30,7 @@
 		2AE758D71791721B00EC65B5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2AE758D51791721B00EC65B5 /* InfoPlist.strings */; };
 		2AE758DA1791721B00EC65B5 /* KIImagePagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE758D91791721B00EC65B5 /* KIImagePagerTests.m */; };
 		2AE758E1179172B100EC65B5 /* KIImagePager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A10306E17114BC300333366 /* KIImagePager.m */; };
+		A65E0870190FAC8B0034ED47 /* INMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A65E086F190FAC8B0034ED47 /* INMImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,8 @@
 		2AE758D61791721B00EC65B5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2AE758D91791721B00EC65B5 /* KIImagePagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KIImagePagerTests.m; sourceTree = "<group>"; };
 		2AE758DB1791721B00EC65B5 /* KIImagePagerTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KIImagePagerTests-Prefix.pch"; sourceTree = "<group>"; };
+		A65E086E190FAC8B0034ED47 /* INMImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INMImageView.h; sourceTree = "<group>"; };
+		A65E086F190FAC8B0034ED47 /* INMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INMImageView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +166,8 @@
 				2A103097171168C100333366 /* KICamera@2x.png */,
 				2A10306D17114BC300333366 /* KIImagePager.h */,
 				2A10306E17114BC300333366 /* KIImagePager.m */,
+				A65E086E190FAC8B0034ED47 /* INMImageView.h */,
+				A65E086F190FAC8B0034ED47 /* INMImageView.m */,
 			);
 			path = KIImagePager;
 			sourceTree = "<group>";
@@ -303,6 +308,7 @@
 			files = (
 				2A10305617114B9100333366 /* main.m in Sources */,
 				2A10305A17114B9100333366 /* KIAppDelegate.m in Sources */,
+				A65E0870190FAC8B0034ED47 /* INMImageView.m in Sources */,
 				2A10306617114B9100333366 /* KIViewController.m in Sources */,
 				2A10306F17114BC300333366 /* KIImagePager.m in Sources */,
 			);
