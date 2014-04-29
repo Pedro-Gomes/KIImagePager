@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface INMImageView : UIImageView
+@protocol INMImageViewDelegate <NSObject>
 
+@optional
+-(void)didRestartAnimation:(UIImageView *)imageView;
+
+@end
+
+@interface INMImageView : UIImageView
+    @property (nonatomic, strong) UIImage *placeholderImage;
+    @property (nonatomic, weak) id<INMImageViewDelegate> delegate;
 @end

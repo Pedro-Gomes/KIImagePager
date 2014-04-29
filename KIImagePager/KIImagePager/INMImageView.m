@@ -63,12 +63,12 @@
 -(void)performTransition {
     if ([self.timer isValid] && self.isRunning){
         NSLog(@"%p --> %d", self , self.tag);
-        
+
         if (self.animationImages.count > 0){
             self.currentIndex =  (self.currentIndex + 1) % self.animationImages.count;
         } else if (self.firstRun) {
             self.firstRun = NO;
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:self.animationDuration target:self selector:@selector(performTransition) userInfo:nil repeats:NO];
+             self.timer = [NSTimer scheduledTimerWithTimeInterval:self.animationDuration target:self selector:@selector(performTransition) userInfo:nil repeats:NO];
             return;
         }
         
