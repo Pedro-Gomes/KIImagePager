@@ -18,4 +18,5 @@
 @interface INMImageView : UIImageView
     @property (nonatomic, strong) UIImage *placeholderImage;
     @property (nonatomic, weak) id<INMImageViewDelegate> delegate;
+    -(void)stopAnimating;
 @end

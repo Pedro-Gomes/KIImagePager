@@ -453,4 +453,12 @@
     [self checkWetherToToggleSlideshowTimer];
 }
 
+-(void)stopAnimating {
+    for(UIView* view in self.scrollView.subviews){
+        if([view isKindOfClass:[INMImageView class]]){
+            [(INMImageView*)view stopAnimating];
+        }
+    }
+}
+
 @end

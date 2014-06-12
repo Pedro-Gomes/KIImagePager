@@ -51,6 +51,8 @@
 // Slideshow
 @property (nonatomic) NSUInteger slideshowTimeInterval; // Defaults 0.0f (off)
 @property (nonatomic) BOOL slideshowShouldCallScrollToDelegate; // Defaults YES
+-(void)stopAnimating;
+
 
 // Caption Label
 @property (nonatomic, strong) UIColor *captionTextColor; // Defaults Black
