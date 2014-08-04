@@ -17,6 +17,10 @@
 
 @interface INMImageView : UIImageView
     @property (nonatomic, strong) UIImage *placeholderImage;
+    @property (nonatomic, strong) UIImage *placeHolderOverlayForFailure;
+    @property (nonatomic, strong) UIImage *placeHolderSpinnerForLoad;
     @property (nonatomic, weak) id<INMImageViewDelegate> delegate;
+    @property (nonatomic) UIViewContentMode contentModeForSuccess;
+
     -(void)stopAnimating;
 @end

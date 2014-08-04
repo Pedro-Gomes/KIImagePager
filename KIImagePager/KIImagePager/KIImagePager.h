@@ -19,6 +19,8 @@
 
 @optional
 - (UIImage *) placeHolderImageForImagePager;
+- (UIImage *) placeHolderOverlayForFailure;
+- (UIImage *) placeHolderSpinnerForLoad;
 - (NSString *) captionForImageAtIndex:(NSUInteger)index;
 - (UIViewContentMode) contentModeForPlaceHolder;
 

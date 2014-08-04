@@ -174,10 +174,21 @@
             CGRect imageFrame = CGRectMake(_scrollView.frame.size.width * i, 0, _scrollView.frame.size.width, _scrollView.frame.size.height);
             INMImageView *imageView = [[INMImageView alloc] initWithFrame:imageFrame];
             [imageView setBackgroundColor:[UIColor clearColor]];
-            [imageView setContentMode:[_dataSource contentModeForImage:i]];
+            [imageView setContentMode:UIViewContentModeCenter];
+            [imageView setContentModeForSuccess:[_dataSource contentModeForImage:i]];
             [imageView setTag:i + 2300];
             [imageView setDelegate:self];
-            [imageView setPlaceholderImage:[_dataSource placeHolderImageForImagePager]];
+            if([self.dataSource respondsToSelector:@selector(placeHolderImageForImagePager)]){
+                [imageView setPlaceholderImage:[_dataSource placeHolderImageForImagePager]];
+            }
+            
+            if([self.dataSource respondsToSelector:@selector(placeHolderOverlayForFailure)]){
+                [imageView setPlaceHolderOverlayForFailure:[_dataSource placeHolderOverlayForFailure]];
+            }
+            
+            if([self.dataSource respondsToSelector:@selector(placeHolderSpinnerForLoad)]){
+                [imageView setPlaceHolderSpinnerForLoad:[_dataSource placeHolderSpinnerForLoad]];
+            }
             [self loadImageView:imageView WithObject:[aImageUrls objectAtIndex:i]];
             
             // Add GestureRecognizer to ImageView
