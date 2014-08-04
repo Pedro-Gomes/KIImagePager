@@ -149,7 +149,7 @@
                                   repeat:CGFLOAT_MAX];
     }
     [self setContentMode:UIViewContentModeCenter];
-    [self setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.pictureshack.us/images/85982_dks2_majula_01_small.jpg"]]
+    [self setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]]
                 placeholderImage:self.placeholderImage
                          success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                              [self setImage:image];
